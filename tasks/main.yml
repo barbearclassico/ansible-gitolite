@@ -17,9 +17,9 @@
 
 - name: Install required packages for gitolite
   tags: gitolite
-  with_items: gitolite_package_list
-  action: "{{ ansible_pkg_mgr }} state=installed name={{ item }}"
-
+  apt:
+    pkg: "{{ gitolite_package_list }}"
+    state: present
 
 # create gitolite user and group
 #   group
@@ -111,12 +111,12 @@
 
 - name: Initialize gitolite
   tags: gitolite
-  sudo: yes
-  sudo_user: "{{ gitolite_user_name }}"
-  action: command {{ gitolite_install_dir }}/gitolite setup -pk {{ gitolite_user_home }}/.ssh/id_rsa.pub
-    chdir={{ gitolite_user_home }}
-    creates={{ gitolite_user_home }}/.gitolite
-
+  command: "{{ gitolite_install_dir }}/gitolite setup -pk {{ gitolite_user_home }}/.ssh/id_rsa.pub"
+  become: yes
+  become_user: "{{ gitolite_user_name }}"
+  args:
+    chdir: "{{ gitolite_user_home }}"
+    creates: "{{ gitolite_user_home }}/.gitolite"
 
 # configure smart-https for gitolite
 #- include: https.yml
