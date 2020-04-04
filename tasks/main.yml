@@ -12,8 +12,8 @@
   tags: gitolite
 
 # manage SELinux
-- include: selinux.yml
-  tags: gitolite
+#- include: selinux.yml
+#  tags: gitolite
 
 - name: Install required packages for gitolite
   tags: gitolite
