@@ -1,8 +1,8 @@
 ---
 - name: git clone gitolite-admin
   tags: gitolite
-  sudo: yes
-  sudo_user: "{{ gitolite_user_name }}"
+  become: yes
+  become_user: "{{ gitolite_user_name }}"
   git:
     force=yes
     accept_hostkey=yes
@@ -40,8 +40,8 @@
   tags: gitolite
   when: gitolite_install_gitolite_conf.changed or gitolite_install_gitolite_ssh_user_accounts.changed
   register: gitolite_git_add_gitolite_admin
-  sudo: yes
-  sudo_user: "{{ gitolite_user_name }}"
+  become: yes
+  become_user: "{{ gitolite_user_name }}"
   command: git add --all
     chdir={{ gitolite_user_home }}/gitolite-admin
 
@@ -50,8 +50,8 @@
   tags: gitolite
   when: gitolite_git_add_gitolite_admin.changed
   register: gitolite_git_commit_gitolite_admin
-  sudo: yes
-  sudo_user: "{{ gitolite_user_name }}"
+  become: yes
+  become_user: "{{ gitolite_user_name }}"
   command: git commit -m 'Updated gitolite-admin by Ansible'
     chdir={{ gitolite_user_home }}/gitolite-admin
 
@@ -59,7 +59,7 @@
 - name: git push gitolite-admin
   tags: gitolite
   when: gitolite_git_commit_gitolite_admin.changed
-  sudo: yes
-  sudo_user: "{{ gitolite_user_name }}"
+  become: yes
+  become_user: "{{ gitolite_user_name }}"
   command: git push --set-upstream origin master
     chdir={{ gitolite_user_home }}/gitolite-admin
