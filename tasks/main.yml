@@ -50,7 +50,7 @@
   tags: gitolite
   template:
     src: ssh_config.j2
-    dest: {{ gitolite_user_home }}/.ssh/config
+    dest: "{{ gitolite_user_home }}/.ssh/config"
     mode: 0600
     owner: {{ gitolite_user_name }}
     group: {{ gitolite_user_group }}
@@ -60,7 +60,7 @@
   tags: gitolite
   template:
     src: gitconfig.j2
-    dest: {{ gitolite_user_home }}/.gitconfig
+    dest: "{{ gitolite_user_home }}/.gitconfig"
     mode: 0600
     owner: {{ gitolite_user_name }}
     group: {{ gitolite_user_group }}
@@ -87,7 +87,7 @@
 
 - name: Install gitolite
   tags: gitolite
-  action: command /usr/local/src/gitolite/install -to {{ gitolite_install_dir }}
+  action: "command /usr/local/src/gitolite/install -to {{ gitolite_install_dir }}"
     creates: "{{ gitolite_install_dir }}/gitolite"
 
 - name: Install gitolite configuration
