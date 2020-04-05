@@ -18,8 +18,8 @@
     src: gitolite.conf.j2
     dest: "{{ gitolite_user_home }}/gitolite-admin/conf/gitolite.conf"
     mode: 0640
-    owner: {{ gitolite_user_name }}
-    group: {{ gitolite_user_group }}
+    owner: "{{ gitolite_user_name }}"
+    group: "{{ gitolite_user_group }}"
 
 # Install gitolite user accounts for git+ssh
 - name: Install gitolite SSH user accounts
@@ -30,8 +30,8 @@
     src: "files/gitolite/users/ssh/{{ item }}.pub"
     dest: "{{ gitolite_user_home }}/gitolite-admin/keydir/{{ item }}.pub"
     mode: 0640
-    owner: {{ gitolite_user_name }}
-    group: {{ gitolite_user_group }}
+    owner: "{{ gitolite_user_name }}"
+    group: "{{ gitolite_user_group }}"
 
 # Manage changes inside the gitolite-admin repository
 #   stage changes
@@ -42,6 +42,7 @@
   become: yes
   become_user: "{{ gitolite_user_name }}"
   command: git add --all
+  args:
     chdir: "{{ gitolite_user_home }}/gitolite-admin"
 
 #   commit changes
@@ -52,6 +53,7 @@
   become: yes
   become_user: "{{ gitolite_user_name }}"
   command: git commit -m 'Updated gitolite-admin by Ansible'
+  args:
     chdir: "{{ gitolite_user_home }}/gitolite-admin"
 
 #   push changes
@@ -61,4 +63,5 @@
   become: yes
   become_user: "{{ gitolite_user_name }}"
   command: git push --set-upstream origin master
+  args:
     chdir: "{{ gitolite_user_home }}/gitolite-admin"

@@ -28,16 +28,16 @@
   tags: gitolite
   group:
     state: present
-    name: {{ gitolite_user_group }}
+    name: "{{ gitolite_user_group }}"
     system: yes
 #   user
 - name: Create gitolite user
   tags: gitolite
   user:
     state: present
-    name: {{ gitolite_user_name }}
-    group: {{ gitolite_user_group }}
-    home: {{ gitolite_user_home }}
+    name: "{{ gitolite_user_name }}"
+    group: "{{ gitolite_user_group }}"
+    home: "{{ gitolite_user_home }}"
     createhome: yes
     generate_ssh_key: yes
     ssh_key_bits: 4096
@@ -52,8 +52,8 @@
     src: ssh_config.j2
     dest: "{{ gitolite_user_home }}/.ssh/config"
     mode: 0600
-    owner: {{ gitolite_user_name }}
-    group: {{ gitolite_user_group }}
+    owner: "{{ gitolite_user_name }}"
+    group: "{{ gitolite_user_group }}"
 
 # manage gitolite users' git configuration
 - name: Install gitolite git configuration
@@ -62,8 +62,8 @@
     src: gitconfig.j2
     dest: "{{ gitolite_user_home }}/.gitconfig"
     mode: 0600
-    owner: {{ gitolite_user_name }}
-    group: {{ gitolite_user_group }}
+    owner: "{{ gitolite_user_name }}"
+    group: "{{ gitolite_user_group }}"
 
 
 # setup gitolite
@@ -71,7 +71,7 @@
   tags: gitolite
   file:
     state: directory
-    dest: {{ gitolite_install_dir }}
+    dest: "{{ gitolite_install_dir }}"
     mode: 0755
     owner: root
     group: root
@@ -80,14 +80,15 @@
   tags: gitolite
   git:
     force: yes
-    repo: {{ gitolite_url }}
-    version: {{ gitolite_tag }}
+    repo: "{{ gitolite_url }}"
+    version: "{{ gitolite_tag }}"
     remote: github
     dest: /usr/local/src/gitolite
 
 - name: Install gitolite
   tags: gitolite
-  action: "command /usr/local/src/gitolite/install -to {{ gitolite_install_dir }}"
+  command: "/usr/local/src/gitolite/install -to {{ gitolite_install_dir }}"
+  args:
     creates: "{{ gitolite_install_dir }}/gitolite"
 
 - name: Install gitolite configuration
@@ -97,18 +98,18 @@
     src: gitolite.rc.j2
     dest: "{{ gitolite_user_home }}/.gitolite.rc"
     mode: 0640
-    owner: {{ gitolite_user_name }}
-    group: {{ gitolite_user_group }}
+    owner: "{{ gitolite_user_name }}"
+    group: "{{ gitolite_user_group }}"
 
 - name: Install gitolite shell user list
   tags: gitolite
   when: gitolite_gitoliterc_shell_user_list|count != 0
   template:
     src: gitolite.rc.shell_user.j2
-    dest: {{ gitolite_user_home }}/.gitolite.rc.shell_user
+    dest: "{{ gitolite_user_home }}/.gitolite.rc.shell_user"
     mode: 0640
-    owner: {{ gitolite_user_name }}
-    group: {{ gitolite_user_group }}
+    owner: "{{ gitolite_user_name }}"
+    group: "{{ gitolite_user_group }}"
 
 - name: Initialize gitolite
   tags: gitolite
