@@ -4,22 +4,22 @@
   become: yes
   become_user: "{{ gitolite_user_name }}"
   git:
-    force=yes
-    accept_hostkey=yes
-    repo={{ gitolite_user_name }}@localhost:gitolite-admin.git
-    remote=origin
-    dest={{ gitolite_user_home }}/gitolite-admin
+    force: yes
+    accept_hostkey: yes
+    repo: "{{ gitolite_user_name }}@localhost:gitolite-admin.git"
+    remote: origin
+    dest: "{{ gitolite_user_home }}/gitolite-admin"
 
 # Install a gitolite repositories configuration file "gitolite.conf"
 - name: Install gitolite.conf
   tags: gitolite
   register: gitolite_install_gitolite_conf
   template:
-    src=gitolite.conf.j2
-    dest={{ gitolite_user_home }}/gitolite-admin/conf/gitolite.conf
-    mode=0640
-    owner={{ gitolite_user_name }}
-    group={{ gitolite_user_group }}
+    src: gitolite.conf.j2
+    dest: "{{ gitolite_user_home }}/gitolite-admin/conf/gitolite.conf"
+    mode: 0640
+    owner: {{ gitolite_user_name }}
+    group: {{ gitolite_user_group }}
 
 # Install gitolite user accounts for git+ssh
 - name: Install gitolite SSH user accounts
@@ -27,12 +27,11 @@
   register: gitolite_install_gitolite_ssh_user_accounts
   with_items: gitolite_accounts_ssh
   copy:
-    src=files/gitolite/users/ssh/{{ item }}.pub
-    dest={{ gitolite_user_home }}/gitolite-admin/keydir/{{ item }}.pub
-    mode=0640
-    owner={{ gitolite_user_name }}
-    group={{ gitolite_user_group }}
-
+    src: "files/gitolite/users/ssh/{{ item }}.pub"
+    dest: "{{ gitolite_user_home }}/gitolite-admin/keydir/{{ item }}.pub"
+    mode: 0640
+    owner: {{ gitolite_user_name }}
+    group: {{ gitolite_user_group }}
 
 # Manage changes inside the gitolite-admin repository
 #   stage changes
@@ -43,7 +42,7 @@
   become: yes
   become_user: "{{ gitolite_user_name }}"
   command: git add --all
-    chdir={{ gitolite_user_home }}/gitolite-admin
+    chdir: "{{ gitolite_user_home }}/gitolite-admin"
 
 #   commit changes
 - name: git commit gitolite-admin
@@ -53,7 +52,7 @@
   become: yes
   become_user: "{{ gitolite_user_name }}"
   command: git commit -m 'Updated gitolite-admin by Ansible'
-    chdir={{ gitolite_user_home }}/gitolite-admin
+    chdir: "{{ gitolite_user_home }}/gitolite-admin"
 
 #   push changes
 - name: git push gitolite-admin
@@ -62,4 +61,4 @@
   become: yes
   become_user: "{{ gitolite_user_name }}"
   command: git push --set-upstream origin master
-    chdir={{ gitolite_user_home }}/gitolite-admin
+    chdir: "{{ gitolite_user_home }}/gitolite-admin"
